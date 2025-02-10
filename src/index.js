@@ -7,11 +7,15 @@
 
 import * as THREE from 'three';
 
+import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader.js';
 import { Text } from 'troika-three-text';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { XR_BUTTONS } from 'gamepad-wrapper';
 import { gsap } from 'gsap';
 import { init } from './init.js';
+
 
 const bullets = {};
 const forwardVector = new THREE.Vector3(0, 0, -1);
@@ -67,6 +71,41 @@ function setupScene({ scene, camera, renderer, player, controllers }) {
 	scoreText.position.set(0, 0.67, -1.44);
 	scoreText.rotateX(-Math.PI / 3.3);
 	updateScoreDisplay();
+
+	const ttfLoader = new TTFLoader();
+
+	// Load your TTF font (host it locally or via a public URL)
+	ttfLoader.load('assets/SpaceMono-Bold.ttf', (ttfData) => {
+		// Create a Font object
+		const myFont = new Font(ttfData);
+
+		// Create the text geometry
+		const textGeometry = new TextGeometry('SQLI', {
+			font: myFont,
+			size: 4,            // font size
+			height: 0.2,           // thickness of extruded text
+			curveSegments: 6,   // number of curve segments
+			bevelEnabled: true,  
+			bevelThickness: 0,   
+			bevelSize: 0.2,      
+			bevelOffset: 0,      
+			bevelSegments: 5     
+		});
+		const textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+
+		// Combine geometry and material into a mesh
+		const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+		// Optionally, center the text
+		textGeometry.computeBoundingBox();
+		const bbox = textGeometry.boundingBox;
+		const textWidth = bbox.max.x - bbox.min.x;
+		textMesh.position.set(0, 5.17, -26.44);
+		textMesh.rotateX(-Math.PI / 19.3);
+
+		// Add to the scene
+		scene.add(textMesh);
+	});
 
 	// Load and set up positional audio
 	const listener = new THREE.AudioListener();
