@@ -91,7 +91,13 @@ function setupScene({ scene, camera, renderer, player, controllers }) {
 			bevelOffset: 0,      
 			bevelSegments: 5     
 		});
-		const textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+		const textMaterial = new THREE.MeshPhongMaterial({ 
+			color: 0x8f00ff        // Base color of the text
+			//emissive: 0x222222,     // Emissive (glow) color
+			//emissiveIntensity: 1,   // Strength of the emissive color
+			//shininess: 80           // Higher value => sharper, brighter specular highlight
+			// specular: 0xaaaaaa   // (Optional) Specular color
+		});
 
 		// Combine geometry and material into a mesh
 		const textMesh = new THREE.Mesh(textGeometry, textMaterial);
